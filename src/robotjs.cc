@@ -133,6 +133,17 @@ NAN_METHOD(getMousePos)
 	info.GetReturnValue().Set(obj);
 }
 
+NAN_METHOD(getLocalMousePos)
+{
+	MMPoint pos = getLocalMousePos();
+
+	//Return object with .x and .y.
+	Local<Object> obj = Nan::New<Object>();
+	Nan::Set(obj, Nan::New("x").ToLocalChecked(), Nan::New((int)pos.x));
+	Nan::Set(obj, Nan::New("y").ToLocalChecked(), Nan::New((int)pos.y));
+	info.GetReturnValue().Set(obj);
+}
+
 NAN_METHOD(mouseClick)
 {
 	MMMouseButton button = LEFT_BUTTON;
@@ -671,6 +682,20 @@ NAN_METHOD(getScreenSize)
 	info.GetReturnValue().Set(obj);
 }
 
+NAN_METHOD(getLocalScreenSize)
+{
+	//Get display size.
+	MMSize displaySize = getLocalDisplaySize();
+
+	//Create our return object.
+	Local<Object> obj = Nan::New<Object>();
+	Nan::Set(obj, Nan::New("width").ToLocalChecked(), Nan::New<Number>(displaySize.width));
+	Nan::Set(obj, Nan::New("height").ToLocalChecked(), Nan::New<Number>(displaySize.height));
+
+	//Return our object with .width and .height.
+	info.GetReturnValue().Set(obj);
+}
+
 NAN_METHOD(getXDisplayName)
 {
 	#if defined(USE_X11)
@@ -826,6 +851,9 @@ NAN_MODULE_INIT(InitAll)
 	Nan::Set(target, Nan::New("getMousePos").ToLocalChecked(),
 		Nan::GetFunction(Nan::New<FunctionTemplate>(getMousePos)).ToLocalChecked());
 
+	Nan::Set(target, Nan::New("getLocalMousePos").ToLocalChecked(),
+		Nan::GetFunction(Nan::New<FunctionTemplate>(getLocalMousePos)).ToLocalChecked());
+
 	Nan::Set(target, Nan::New("mouseClick").ToLocalChecked(),
 		Nan::GetFunction(Nan::New<FunctionTemplate>(mouseClick)).ToLocalChecked());
 
@@ -858,6 +886,9 @@ NAN_MODULE_INIT(InitAll)
 
 	Nan::Set(target, Nan::New("getScreenSize").ToLocalChecked(),
 		Nan::GetFunction(Nan::New<FunctionTemplate>(getScreenSize)).ToLocalChecked());
+
+	Nan::Set(target, Nan::New("getLocalScreenSize").ToLocalChecked(),
+		Nan::GetFunction(Nan::New<FunctionTemplate>(getLocalScreenSize)).ToLocalChecked());
 
 	Nan::Set(target, Nan::New("captureScreen").ToLocalChecked(),
 		Nan::GetFunction(Nan::New<FunctionTemplate>(captureScreen)).ToLocalChecked());

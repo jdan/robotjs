@@ -22,7 +22,39 @@ MMSize getMainDisplaySize(void)
 	                  (size_t)DisplayHeight(display, screen));
 #elif defined(IS_WINDOWS)
 	return MMSizeMake((size_t)GetSystemMetrics(SM_CXSCREEN),
-	                  (size_t)GetSystemMetrics(SM_CYSCREEN));
+										(size_t)GetSystemMetrics(SM_CYSCREEN));
+#endif
+}
+
+MMSize getLocalDisplaySize(void)
+{
+#if defined(IS_MACOSX)
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint point = CGEventGetLocation(event);
+	CFRelease(event);
+
+	// Modified!
+	// Idk why this would ever be greater than 1?
+	int MAX_DISPLAYS = 1;
+
+	uint32_t *actualCount = (uint32_t *)malloc(sizeof(uint32_t));
+	CGDirectDisplayID *displays = (CGDirectDisplayID *)malloc(MAX_DISPLAYS * sizeof(CGDirectDisplayID));
+	CGGetDisplaysWithPoint(point, MAX_DISPLAYS, displays, actualCount);
+
+	free(actualCount);
+	free(displays);
+
+	return MMSizeMake(CGDisplayPixelsWide(displays[0]),
+										CGDisplayPixelsHigh(displays[0]));
+#elif defined(USE_X11)
+	Display *display = XGetMainDisplay();
+	const int screen = DefaultScreen(display);
+
+	return MMSizeMake((size_t)DisplayWidth(display, screen),
+										(size_t)DisplayHeight(display, screen));
+#elif defined(IS_WINDOWS)
+	return MMSizeMake((size_t)GetSystemMetrics(SM_CXSCREEN),
+										(size_t)GetSystemMetrics(SM_CYSCREEN));
 #endif
 }
 

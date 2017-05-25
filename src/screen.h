@@ -18,6 +18,9 @@ extern "C"
 /* Returns the size of the main display. */
 MMSize getMainDisplaySize(void);
 
+/* Returns the size of the display that the mouse cursor is on */
+MMSize getLocalDisplaySize(void);
+
 /* Convenience function that returns whether the given point is in the bounds
  * of the main screen. */
 bool pointVisibleOnMainDisplay(MMPoint point);

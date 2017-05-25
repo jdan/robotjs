@@ -78,6 +78,10 @@ bool smoothlyMoveMouse(MMPoint point);
 /* Returns the coordinates of the mouse on the current screen. */
 MMPoint getMousePos(void);
 
+/* Returns the coordinates of the mouse on the current screen, relative to the
+   top left corner of the current screen */
+MMPoint getLocalMousePos(void);
+
 /* Holds down or releases the mouse with the given button in the current
  * position. */
 void toggleMouse(bool down, MMMouseButton button);

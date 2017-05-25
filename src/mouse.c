@@ -147,7 +147,52 @@ MMPoint getMousePos()
 
 	return MMPointFromCGPoint(point);
 #elif defined(USE_X11)
-	int x, y; /* This is all we care about. Seriously. */
+	int x, y;						 /* This is all we care about. Seriously. */
+	Window garb1, garb2; /* Why you can't specify NULL as a parameter */
+	int garb_x, garb_y;	/* is beyond me. */
+	unsigned int more_garbage;
+
+	Display *display = XGetMainDisplay();
+	XQueryPointer(display, XDefaultRootWindow(display), &garb1, &garb2,
+								&x, &y, &garb_x, &garb_y, &more_garbage);
+
+	return MMPointMake(x, y);
+#elif defined(IS_WINDOWS)
+	POINT point;
+	GetCursorPos(&point);
+
+	return MMPointFromPOINT(point);
+#endif
+}
+
+MMPoint getLocalMousePos()
+{
+#if defined(IS_MACOSX)
+	CGEventRef event = CGEventCreate(NULL);
+	CGPoint point = CGEventGetLocation(event);
+	CFRelease(event);
+
+	// Modified!
+	// Idk why this would ever be greater than 1?
+	int MAX_DISPLAYS = 1;
+
+	uint32_t *actualCount = (uint32_t *)malloc(sizeof(uint32_t));
+	CGDirectDisplayID *displays = (CGDirectDisplayID *)malloc(MAX_DISPLAYS * sizeof(CGDirectDisplayID));
+	CGGetDisplaysWithPoint(point, MAX_DISPLAYS, displays, actualCount);
+
+	CGRect bounds = CGDisplayBounds(displays[0]);
+	CGPoint topLeft = bounds.origin;
+
+	CGPoint ret;
+	ret.x = point.x - topLeft.x;
+	ret.y = point.y - topLeft.y;
+
+	free(actualCount);
+	free(displays);
+
+	return MMPointFromCGPoint(ret);
+#elif defined(USE_X11)
+	int x, y;						 /* This is all we care about. Seriously. */
 	Window garb1, garb2; /* Why you can't specify NULL as a parameter */
 	int garb_x, garb_y;  /* is beyond me. */
 	unsigned int more_garbage;
