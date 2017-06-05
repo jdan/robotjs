@@ -42,10 +42,12 @@ MMSize getLocalDisplaySize(void)
 	CGGetDisplaysWithPoint(point, MAX_DISPLAYS, displays, actualCount);
 
 	free(actualCount);
-	free(displays);
 
-	return MMSizeMake(CGDisplayPixelsWide(displays[0]),
-										CGDisplayPixelsHigh(displays[0]));
+	MMSize size = MMSizeMake(CGDisplayPixelsWide(displays[0]),
+													 CGDisplayPixelsHigh(displays[0]));
+
+	free(displays);
+	return size;
 #elif defined(USE_X11)
 	Display *display = XGetMainDisplay();
 	const int screen = DefaultScreen(display);
