@@ -8,28 +8,31 @@
 
 /* Some generic, cross-platform types. */
 
-struct _MMPoint {
-	size_t x;
-	size_t y;
+struct _MMPoint
+{
+	int x;
+	int y;
 };
 
 typedef struct _MMPoint MMPoint;
 
-struct _MMSize {
+struct _MMSize
+{
 	size_t width;
 	size_t height;
 };
 
 typedef struct _MMSize MMSize;
 
-struct _MMRect {
+struct _MMRect
+{
 	MMPoint origin;
 	MMSize size;
 };
 
 typedef struct _MMRect MMRect;
 
-H_INLINE MMPoint MMPointMake(size_t x, size_t y)
+H_INLINE MMPoint MMPointMake(int x, int y)
 {
 	MMPoint point;
 	point.x = x;
