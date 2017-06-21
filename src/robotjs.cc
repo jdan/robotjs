@@ -657,15 +657,23 @@ NAN_METHOD(getPixelColor)
 
 	bitmap = copyMMBitmapFromDisplayInRect(MMRectMake(x, y, 1, 1));
 
-	color = MMRGBHexAtPoint(bitmap, 0, 0);
+	if (bitmap == NULL)
+	{
+		info.GetReturnValue().Set(Nan::New("#FFFFFF").ToLocalChecked());
+	}
+	else
+	{
 
-	char hex[7];
+		color = MMRGBHexAtPoint(bitmap, 0, 0);
 
-	padHex(color, hex);
+		char hex[7];
 
-	destroyMMBitmap(bitmap);
+		padHex(color, hex);
 
-	info.GetReturnValue().Set(Nan::New(hex).ToLocalChecked());
+		destroyMMBitmap(bitmap);
+
+		info.GetReturnValue().Set(Nan::New(hex).ToLocalChecked());
+	}
 }
 
 NAN_METHOD(getScreenSize)
