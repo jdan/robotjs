@@ -659,7 +659,7 @@ NAN_METHOD(getPixelColor)
 
 	if (bitmap == NULL)
 	{
-		info.GetReturnValue().Set(Nan::New("#FFFFFF").ToLocalChecked());
+		info.GetReturnValue().Set(Nan::New("FFFFFF").ToLocalChecked());
 	}
 	else
 	{
